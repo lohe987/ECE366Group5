@@ -9,5 +9,5 @@ slt Rd, Rs	x 0 xxx yyy		$Rx < $Ry,Branch = 1	{R0...R7}
 add Rd, Rs	x 110 dd ss		$Rd = $Rd + $Rs		{R0...R3}
 lsl Rd,imm	x 11 dd iii		$Rd = $Rd <<imm		Rd:{R0...R3}; imm[0,7]
 b   imm		x 10 iiiii	ifBranch=1(PC+=imm)		imm[-16,15]
-j   imm		x 11 dd iii		PC = PC+imm		imm[16,15]
+j   imm		x 11 dd iii		PC = PC+imm		imm[-16,15]
 end		11111111		Ends the program
