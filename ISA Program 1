@@ -1,7 +1,7 @@
 	      ASEMBLY                       ISA
   ______________________         _________________
   lw $s0, 0x2000($zero)	         load R0, (0) 
-	lw $s1, 0x2004($zero)	         load R1, (1)
+  lw $s1, 0x2004($zero)	         load R1, (1)
 
 # Step (1)
 	addi $s2, $zero, 1             addi R2, 1 
