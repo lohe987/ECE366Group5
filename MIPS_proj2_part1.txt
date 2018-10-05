@@ -1,0 +1,30 @@
+Group Names:
+Joseph De Joya
+Martin Cardona
+Alberto Espinoza
+
+MIPS code:
+
+init $R2, 0			#$R2= 0
+load $R0, $R2			#$R0 = MEM[$R2] = P; R2 needs to be 0
+init $R2, 1			#$R2 = 1
+load $R1, $R2			#$R1 = MEM[$R2= 17(Q)
+mov $R2, $R1			#$R2= $R1 which is 17 from previous line of code
+addi $R2, -1			#R2 = 16
+comp $R2			#takes complement of 16(-16)
+j while				#while = 2
+
+loop:
+	add $R0, $R3		#P = P - 16
+while: 
+	slt $r0, $r1
+	b lookup
+	j loop			#loop = -2
+
+lookup:
+	addi  $R0, 2		#$R0 = 2 which will help with the lookup table
+	load  $R1, $R0	#$R1 = MEM[$R0]
+	init    $R0, 1		#$R0 = 1
+	lsl $R0, 1		#$R0 = $R0 << 1 = 2
+	store $R1, $R0	#MEM[$R0] = $R1
+	end
