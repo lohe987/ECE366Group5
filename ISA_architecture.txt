@@ -1,6 +1,6 @@
 Instruction:    Machine Code Format:	Functionality:	   	Range:
-load Rd,(Ra)	x 011 dd aa		$Rd = MEM[$Ra]     	{R0,R1,R2,R3}
-str Rd,(Ra)	  x 100 dd aa		MEM[$Ra] = $Rd	   	{R0, R1, R2, R3}
+load Rd,Ra	x 011 dd aa		$Rd = MEM[$Ra]     	{R0,R1,R2,R3}
+str Rd,Ra	  x 100 dd aa		MEM[$Ra] = $Rd	   	{R0, R1, R2, R3}
 init Rd,imm	  x 010 ddd i		$Rd = imm	   	    Rd:{R0...R7}; imm[0,1]	
 addi Rd, imm	x 00 dd iii		$Rd = $Rd+imm	   	Rd:{R0..R4}; imm[-4,3]
 comp Rd       x 1111 ddd		$Rd = [2's complement]	Rd:{R0...R7}
