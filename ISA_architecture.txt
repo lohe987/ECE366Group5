@@ -10,5 +10,5 @@ add Rd, Rs	  x 110 dd ss		$Rd = $Rd + $Rs		    {R0...R3}
 lsl Rd,imm	  x 01 dd iii		$Rd = $Rd <<imm		   Rd:{R0...R3}; imm[0,7]
 b   imm       x 10 iiiii	ifBranch=1(PC+=imm)		          imm[-16,15]
 bz  imm       x 101 iiii	if $branch = 0, PC = PC + imm, else PC++	imm[-8, 7]
-j   imm       x 11 dd iii		PC = PC+imm		                imm[-16,15]
+j   imm       x 11  iiiii		PC = PC+imm		                imm[-16,15]
 end		11111111		Ends the program`
