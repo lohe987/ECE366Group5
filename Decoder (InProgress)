@@ -8,19 +8,17 @@ output_file = open("MIPS_machine_code.txt","w")
 for line in input_file:
     if (line == "\n"):              # empty lines ignored
         continue
-    if (line == " "):
-        continue 
+    
     line = line.replace("\n","")    # remove 'endline' character
     print("Instr: ", line)          # show the asm instruction to screen
     line = line.replace(" ","")     # remove spaces anywhere in line
 
-
     
     if(line[0:4] == 'LOAD'):
-        line = line.replace("LOAD","")      # "addi $23, $25, 100" will be spli
+        line = line.replace("LOAD","")     
         line = line.replace("$","")         # remove $'s anywhere
         line = line.replace("R","")         # remove R's anywhere
-        line = line.split(',')              # into three strings: "23" "25" "100"
+        line = line.split(',')              # into three strings
         
         op = "011"                   
         rd = format(int(line[0]), "02b")    # make rs into 2-bit binary format
@@ -36,8 +34,8 @@ for line in input_file:
         
         line = line.replace("$","")         # remove $'s anywhere
         line = line.replace("R","")         # remove R's anywhere
-        line = line.replace("STR","")      # "addi $23, $25, 100" will be split 
-        line = line.split(',')              # into three strings: "23" "25" "100"             
+        line = line.replace("STR","")     
+        line = line.split(',')              # into three strings            
 
         op = "100"                                      
         rd = format(int(line[0]), "02b")    # make rs into 2-bit binary format
@@ -53,8 +51,8 @@ for line in input_file:
         
         line = line.replace("$","")         # remove $'s anywhere
         line = line.replace("R","")         # remove R's anywhere
-        line = line.replace("INIT","")      # "addi $23, $25, 100" will be split 
-        line = line.split(',')              # into three strings: "23" "25" "100"             
+        line = line.replace("INIT","")     
+        line = line.split(',')              # into three strings            
 
         if(line[1][0] == '-'):              # in case imm is negative...
                 line[1] = line[1].replace("-","")        
@@ -75,8 +73,8 @@ for line in input_file:
 
         line = line.replace("$","")         # remove $'s anywhere
         line = line.replace("R","")         # remove R's anywhere
-        line = line.replace("ADDI","")      # "addi $23, $25, 100" will be split 
-        line = line.split(',')              # into three strings: "23" "25" "100"             
+        line = line.replace("ADDI","")     
+        line = line.split(',')              # into three strings             
 
         if(line[1][0] == '-'):              # in case imm is negative...
                 line[1] = line[1].replace("-","")        
@@ -95,8 +93,8 @@ for line in input_file:
         
         line = line.replace("$","")         # remove $'s anywhere
         line = line.replace("R","")         # remove R's anywhere
-        line = line.replace("COMP","")      # "addi $23, $25, 100" will be split 
-        line = line.split(',')              # into three strings: "23" "25" "100"
+        line = line.replace("COMP","")      
+        line = line.split(',')              # into three strings
         
         op = "1111"                   
         rd = format(int(line[0]), "03b")    # make rd into 3-bit binary format
@@ -106,12 +104,12 @@ for line in input_file:
         output_file.write(op + " " + rd + "\n")
 
 
-    elif(line[0:3] == "MOV"):               #
+    elif(line[0:3] == "MOV"):               
 
         line = line.replace("$","")         # remove $'s anywhere
         line = line.replace("R","")         # remove R's anywhere
-        line = line.replace("MOV","")      # "addi $23, $25, 100" will be split 
-        line = line.split(',')              # into three strings: "23" "25" "100"
+        line = line.replace("MOV","")     
+        line = line.split(',')              # into three strings
         
         op = "1"                   
         rd = format(int(line[0]), "03b")    # make rd into 3-bit binary format
@@ -125,8 +123,8 @@ for line in input_file:
         
         line = line.replace("$","")         # remove $'s anywhere
         line = line.replace("R","")         # remove R's anywhere
-        line = line.replace("SLT","")      # "addi $23, $25, 100" will be split 
-        line = line.split(',')              # into three strings: "23" "25" "100"
+        line = line.replace("SLT","")      
+        line = line.split(',')              # into three strings
         
         op = "0"                   
         rd = format(int(line[0]), "03b")    # make rd into 3-bit binary format
@@ -140,8 +138,8 @@ for line in input_file:
         
         line = line.replace("$","")         # remove $'s anywhere
         line = line.replace("R","")         # remove R's anywhere
-        line = line.replace("ADD","")       # "addi $23, $25, 100" will be split 
-        line = line.split(',')              # into three strings: "23" "25" "100"
+        line = line.replace("ADD","")     
+        line = line.split(',')              # into three strings
         
         op = "110"                   
         rd = format(int(line[0]), "02b")    # make rd into 2-bit binary format
@@ -155,8 +153,8 @@ for line in input_file:
         
         line = line.replace("$","")         # remove $'s anywhere
         line = line.replace("R","")         # remove R's anywhere
-        line = line.replace("LSL","")       # "addi $23, $25, 100" will be split 
-        line = line.split(',')              # into three strings: "23" "25" "100"             
+        line = line.replace("LSL","")       
+        line = line.split(',')              # into three strings:            
 
         if(line[1][0] == '-'):              # in case imm is negative...
                 line[1] = line[1].replace("-","")        
@@ -171,40 +169,40 @@ for line in input_file:
         print(op + " " + rd + " " + imm + "\n")     
         output_file.write(op + " " + rd + " " + imm + "\n")  
 
-    elif(line[0:1] == "B"):
+    elif(line[0:2] == "BZ"):
         
-        line = line.replace("B","")         # "addi $23, $25, 100" will be split  
-        line = line.split(',')              # into three strings: "23" "25" "100"
+        line = line.split('BZ')
         
-        if(line[0][0] == '-'):             # in case imm is negative...
-                line[0] = line[0].replace("-","")        
-                line[0] = 0b1111111111111111 - int(line[0]) + 1
-                                            # 2's complement conversion 
-        op = "10"                                      
-        imm = format(int(line[0]), "05b")   # make imm into 5-bit binary format
-        
-	# update screen and output file
-        print(op + " " +imm + "\n")     
-        output_file.write(op + " " + imm + "\n")  
-
-    elif(line[0:2] == "BZ"):               
-        
-        line = line.replace("BZ","")        # "addi $23, $25, 100" will be split           
-
-        if(line[0][0] == '-'):              # in case imm is negative...
-                line[0] = line[0].replace("-","")        
-                line[0] = 0b1111111111111111 - int(line[0]) + 1
+        if(line[1][1] == '-'):              # in case imm is negative...
+                line[1] = line[1].replace("-","")        
+                line[1] = 0b1111 - int(line[1]) + 1
                                             # 2's complement conversion 
         op = "101"                                      
-        imm = format(int(line[0]), "05b")   # make imm into 5-bit binary format
+        imm = format(int(line[1]), "04b")   # make imm into 5-bit binary format
         
 	# update screen and output file
         print(op + " " +imm + "\n")     
         output_file.write(op + " " + imm + "\n")  
+
+    elif(line[0:1] == "B"):
+         
+        line = line.split('B')
+        
+        if(line[1][1] == '-'):              # in case imm is negative...  
+            line[1] = line[1].replace("-","")        
+            line[1] = 0b11111 - int(line[1]) + 1
+                                            # 2's complement conversion
+                                            
+        op = "10"                                      
+        imm = format(int(line[1]), "05b")   # make imm into 5-bit binary format
+        
+	# update screen and output file
+        print(op + " " +imm + "\n")     
+        #output_file.write(op + " " + imm + "\n")  
 
     elif(line[0:1] == "j"):              
 
-        line = line.replace("j","")         # "addi $23, $25, 100" will be split           
+        line = line.replace("j","")                    
 
         if(line[0][0] == '-'):             # in case imm is negative...
                 line[0] = line[0].replace("-","")        
@@ -219,7 +217,7 @@ for line in input_file:
 
     elif(line[0:3] == "END"):          
 
-        line = line.replace("END","")       # "addi $23, $25, 100" will be split
+        line = line.replace("END","")       
         
         op = "11111111"                     #7-bit
         
