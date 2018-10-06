@@ -7,8 +7,8 @@ comp Rd		    x 1111 ddd		$Rd = [2's complement]	Rd:{R0...R7}
 mov Rd, Rs	  x 1 ddd sss		$Rd = $Rs		          {R0...R7}
 slt Rd, Rs	  x 0 ddd sss		$Rd < $Rs,Branch = 1	{R0...R7}
 add Rd, Rs	  x 110 dd ss		$Rd = $Rd + $Rs		    {R0...R3}
-lsl Rd,imm	  x 11 dd iii		$Rd = $Rd <<imm		   Rd:{R0...R3}; imm[0,7]
+lsl Rd,imm	  x 01 dd iii		$Rd = $Rd <<imm		   Rd:{R0...R3}; imm[0,7]
 b   imm		    x 10 iiiii	ifBranch=1(PC+=imm)		          imm[-16,15]
-bz	imm					if $branch = 0, PC = PC + imm, else PC++	imm[-16, 15]
+bz	imm				x 101 iiii	if $branch = 0, PC = PC + imm, else PC++	imm[-8, 7]
 j   imm		    x 11 dd iii		PC = PC+imm		                imm[-16,15]
 end		11111111		Ends the program`
