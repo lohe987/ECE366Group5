@@ -9,6 +9,6 @@ SLT Rd, Rs	  x 0 ddd sss		$Rd < $Rs,Branch = 1	{R0...R7}
 ADD Rd, Rs	  x 110 dd ss		$Rd = $Rd + $Rs		    {R0...R3}
 LSL Rd,imm	  x 01 dd iii		$Rd = $Rd <<imm		   Rd:{R0...R3}; imm[0,7]
 B   imm       x 10 iiiii	ifBranch=1(PC+=imm)		          imm[-16,15]
-BB  imm       x 101 iiii	if $branch = 0, PC = PC + imm, else PC++	imm[-8, 7]
+BZ  imm       x 101 iiii	if $branch = 0, PC = PC + imm, else PC++	imm[-8, 7]
 j   imm       x 11  iiiii		PC = PC+imm		                imm[-16,15]
 END		11111111		Ends the program`
