@@ -1,7 +1,7 @@
 # Group 5
 # Joseph de Joya
-# Martin
-# Alberto
+# Martin Cardona	
+# Alberto Espinoza
 # Last Updated: 10/05/2018
 
 # Program 1: Calculate R = 6^P mod Q
