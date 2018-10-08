@@ -48,7 +48,7 @@
 	SLT		$R1, $R6	# If p' < P then $branch = 1, else $branch = 0
 	B		-12			# If $branch = 1 then go back 12 instructions (PC = PC- 12), else continue
 
-# At this Point R = $R0 = c = 6^P mod Q, hence store R in designated data memort address
+# At this Point R = $R0 = c = 6^P mod Q, hence store R in designated data memory address
 	INIT	$R3, 1		# $R3 = 1
 	LSL		$R3, 1		# $R3 = 1 << 1 = 1 * 2 = 2
 	STR		$R0, $R3	# MEM[$R3] = MEM[2] = R = $R0 = c
