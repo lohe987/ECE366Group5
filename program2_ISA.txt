@@ -1,0 +1,101 @@
+# Group 5
+# Joseph de  Joya
+# Martin Cardona
+# Alberto Espinoza
+# Last Updated: 10/08/2018
+
+# Program 2: Best Match Count
+
+# Data Memory
+# Addr	|	Content
+# 0		|	
+# ...	|	...
+# 3		|	T
+# 4		|	S = best match score
+# 5		|	C = best match count
+# ...	|	...
+# 7		|	n = Number of elements in Pattern_Array
+# 8		|	Pattern_Array[1]
+# 9		|	Pattern_Array[2]
+# ...	|	...
+# 107	|	Pattern_Array[100]
+
+# ISA Implementation
+	
+	INIT	$R0, 0		# Keeps track of best matching score
+	INIT	$R1, 0		# Keeps track of best matching count
+	MOV		$R6, $R0	# Move tracker to $R6 to reuse $R0 later
+	MOV		$R7, $R1	# Move tracker to $R6 to reuse $R1 later
+
+	INIT	$R3, 1		# $R3 = 1
+	ADDI	$R3, 2		# $R3 = 1 + 2 = 3
+	LOAD	$R0, $R3	# $R0 = MEM[$R3] = MEM[3] = T
+	LSL		$R3, 1		# $R3 = 3 * 2 = 6
+	ADDI	$R3, 1		# $R3 = 6 + 1 = 7
+	LOAD	$R1, $R3	# $R1 = MEM[$R3] = MEM[7] = n
+	MOV		$R4, $R0	# Move T to $R4 to reuse $R0 later
+	MOV		$R5, $R1	# Move n to $R5 to reuse $R1 later
+	ADDI	$R3, 1		# $R3 = 7 + 1 = 8, addr of the first element in Pattern_Array
+	J		5			# Go down 5 instructions, PC = PC + 5 (go to start_match)	
+
+# loop_match
+	MOV		$R0, $R5	# $R0 = n
+	ADDI	$R0, -1		# $R0 = n' = n - 1
+	MOV		$R5, $R0	# Move n' to $R5 to reuse $R0 later
+	ADDI	$R3, 1		# $R3 = $R3 + 1, addr of the next element
+# start_match
+	INIT	$R1, 0		# $R0 = 0
+	SLT		$R1, $R0	# If 0 < n then $branch = 1, else $branch = 0
+	B		9			# If $branch = 1 then PC = PC + 9, else PC = PC + 1 (go to done)
+	INIT	$R2, 0		# $R2 = counter = 0
+	LOAD	$R0, $R3	# $R0 = Pattern_Array[n']
+	MOV		$R1, $R4	# $R1 = T
+	XOR		$R0, $R1	# $R0 = $R0 xor $R1
+	COMP	$R0			# $R0 = 2's complement of $R0
+	ADDI	$R0, -1		# $R0 = 1's complement version, every 1 in $R0 is now a matched bit
+	J		5			# PC = PC + 4, go to start_count
+
+# Intermediate jumps
+	J		-14			# PC = PC - 14, go to loop_match
+	J		10			# PC = PC + 10, go to done
+
+# loop_count
+	ADDI	$R2, 1		# $R2 = counter = $R2 + 1
+# loop_no_count
+	LSL		$R0, 1		# $R0 = $R0 << 1
+# start_count
+	EQZ		$R0			# If $R0 == 0 then $branch = 1, else $branch = 0	
+	B		7			# PC = PC +6, go to count_done
+	INIT	$R1, 0		# $R1 = 0
+	SLT		$R0, $R1	# If $R0 < 0 then $branch = 1, else $branch =  0
+	B		-6			# If $branch = 1 then PC = PC - 6 (go to loop_count), else PC = PC + 1
+	J		-6			# PC = PC - 6, go to loop_no_count
+
+# Intermediate jumps
+	J		-10			# PC = PC - 10, go to loop_match
+	J		13			# PC = PC + 13 (done)
+
+# count_done
+	MOV		$R0, $R6	# $R0 = current best matching score
+	SLT		$R0, $R2	# If $R0 < $R2 then $branch = 1, else $branch = 0
+	B		5			# PC = PC + 5, go to update_best_match
+	EQ		$R0, $R2	# If $R0 == $R2 then $branch = 1, else $branch = 0
+	BZ		-6			# If $branch = 0 then PC = PC - 6 (go to loop_match), else PC = PC + 1
+	J		3			# PC = PC + 3, go to update_best_match_count
+	J		-8			# PC = PC - 8, go to loop_match
+# update_best_match
+	MOV		$R6, $R2	# $R6 = $R2 = new best match score
+# update_best_match_count
+	MOV		$R1, $R7	# $R1 = $R7 = current best match count
+	ADDI	$R1, 1		# $R1 = $R1 + 1, since $R2 is a current best match
+	MOV		$R7, $R1	# Move tracker to $R7 to reuse $R1 later.
+	J		-5			# PC = PC - 5, go to loop_match	
+# done
+	MOV		$R0, $R6	# $R0 = $R6 = best matching score
+	MOV		$R1, $R7	# $R1 = $R7 = best matching count
+	INIT	$R2, 1		# $R2 = 1
+	LSL		$R2, 2		# $R2 = 1 * 4 = 4
+	STR		$R0, $R2	# MEM[$R2] = MEM[4] = S = $R0 = best matching score
+	ADDI	$R2, 1		# $R2 = 4 + 1 = 5
+	STR		$R1, $R2	# MEM[$R2] = MEM[5] = S = $R1 = best matching count
+	END
