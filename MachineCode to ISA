@@ -10,7 +10,12 @@ for line in input_file:
     print(line)          # show the asm instruction to screen
     line = line.replace(" ","")     # remove spaces anywhere in line
   
-    if(line[0:4] =='0011'or line[0:4] =='1011'):
+    if(line[0:5] =='01111'or line[0:5] =='11111'):
+        op ="COMP"
+        rd = format(int(line[5:8], 2))
+        print(op + " "+ rd+ "\n")
+
+    elif(line[0:4] =='0011'or line[0:4] =='1011'):
         op ="LOAD"
         rd = format(int(line[4:6], 2))
         ra = format(int(line[6:8],2))
@@ -24,34 +29,34 @@ for line in input_file:
         
     elif(line[0:4] =='0010'or line[0:4] =='1010'):
         op ="INIT"
-        rd = format(int(line[3:5], 2))
-        ra = format(int(line[5:8],2))
+        rd = format(int(line[4:7], 2))
+        ra = format(int(line[7:8],2))
         print(op + " $R" + rd + ", $R" + ra + "\n")
-        
-    elif(line[0:3] =='000'or line[0:3] =='100'):
-        
-    elif(line[0:5] =='01111'or line[0:5] =='11111'):
-        op ="COMP"
-        rd = format(int(line[5:8], 2))
-        print(op + " "+ rd+ "\n")
-        
-    elif(line[0:2] =='01'or line[0:2] =='11'):
-        op ="MOV"
-        rd = format(int(line[2:5], 2))
-        rs = format(int(line[5:8],2))
-        print(op + " $R" + rd + ", $R" + rs+ "\n")
-        
-    elif(line[0:2] =='00'or line[0:2] =='10'):
-        op ="SLT"
-        rd = format(int(line[2:5], 2))
-        rs = format(int(line[5:8],2))
-        print(op + " $R" + rd + ", $R" + rs+ "\n")
-        
+
     elif(line[0:4] =='0110'or line[0:4] =='1110'):
         op ="ADD"
         rd = format(int(line[4:6], 2))
         ra = format(int(line[6:8],2))
         print(op + " $R" + rd + ", $R" + ra + "\n")
+
+    elif(line[0:4] =='0101'or line[0:4] =='1101'):
+        op ="BZ"
+        if(line[4][0] =='1'):       #If imm is negative, convert to decimal
+            imm = int(line[5:8],2)      
+            imm = format(imm - 8)
+        else:
+            imm = format(int(line[4:8],2))            
+        print(op + " $R" + rd + ", " + imm + "\n")
+        
+    elif(line[0:3] =='000'or line[0:3] =='100'):
+        op ="ADDI"
+        rd = format(int(line[3:5], 2))
+        if(line[5][0] =='1'):       #If imm is negative, convert to decimal
+            imm = int(line[6:8],2)      
+            imm = format(imm - 4)
+        else:
+            imm = format(int(line[5:8],2))            
+        print(op + " $R" + rd + ", " + imm + "\n")
         
     elif(line[0:3] =='001'or line[0:3] =='101'):
         op ="LSL"
@@ -60,8 +65,35 @@ for line in input_file:
         print(op + " $R" + rd + ", $R" + ra + "\n")
         
     elif(line[0:3] =='010'or line[0:3] =='110'):
-    elif(line[0:4] =='0101'or line[0:4] =='1101'):
+        op ="B"
+        if(line[3][0] =='1'):       #If imm is negative, convert to decimal
+            imm = int(line[4:8],2)      
+            imm = format(imm - 16)
+        else:
+            imm = format(int(line[3:8],2))            
+        print(op + " $R" + rd + ", " + imm + "\n")
+        
     elif(line[0:3] =='011'or line[0:3] =='111'):
+        op ="j"
+        if(line[3][0] =='1'):       #If imm is negative, convert to decimal
+            imm = int(line[4:8],2)      
+            imm = format(imm - 16)
+        else:
+            imm = format(int(line[3:8],2))            
+        print(op + " $R" + rd + ", " + imm + "\n")
+        
+    elif(line[0:2] =='01'or line[0:2] =='11'):
+        op ="MOV"
+        rd = format(int(line[2:5], 2))
+        rs = format(int(line[5:8],2))
+        print(op + " $R" + rd + ", $R" + rs+ "\n")
+
+    elif(line[0:2] =='00'or line[0:2] =='10'):
+        op ="SLT"
+        rd = format(int(line[2:5], 2))
+        rs = format(int(line[5:8],2))
+        print(op + " $R" + rd + ", $R" + rs+ "\n")
+        
     elif(line[0:8] =='11111111'):
         print("End" + "\n")
         
