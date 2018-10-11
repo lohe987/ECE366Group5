@@ -1,5 +1,5 @@
-# Authors: Group 5, Alberto, Joseph, Martin
-# MIPS instruction encoding:
+#Authors: Group 5, Alberto, Joseph, Martin
+#MIPS instruction encoding:
 #Reads ASSEMBLY code from "MIPS_asm.txt" file
 
 input_file = open("MIPS_asm.txt", "r")
