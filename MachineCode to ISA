@@ -1,3 +1,5 @@
+#Decoder for machine code to our ISA architecture
+
 print("--------")
 input_file = open("MIPS_machine_code.txt","r")
 output_file = open("MIPS_asm.txt", "w")
