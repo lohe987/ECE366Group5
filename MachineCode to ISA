@@ -1,4 +1,4 @@
-#Decoder for machine code to our ISA architecture
+#Dissassembler for machine code to ISA architecture
 
 print("--------")
 input_file = open("MIPS_machine_code.txt","r")
