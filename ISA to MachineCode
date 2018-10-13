@@ -1,13 +1,12 @@
-#Authors: Group 5, Alberto, Joseph, Martin
-#MIPS instruction encoding:
+# Authors: Group 5, Alberto, Joseph, Martin
+# MIPS instruction encoding:
 #Reads ASSEMBLY code from "MIPS_asm.txt" file
 
 input_file = open("MIPS_asm.txt", "r")
 output_file = open("MIPS_machine_code.txt","w")
 
 for line in input_file:
-    def adder(a, b, c):
-        ones =0
+    def adder(a, b, ones):
         chars = "1"
         for char in chars:
             count = a.count(char)
@@ -15,7 +14,10 @@ for line in input_file:
             count = b.count(char)
             ones = ones + count
             #count = c.count(char)
-            print (ones)
+            print ("Total '1' bits: ", ones)
+            print("------------------- \n")
+            
+            
     def foo(x, op, line, n, n2, case):
        
         line = line.replace(x, "")
@@ -24,15 +26,14 @@ for line in input_file:
         line = line.split(',')              # into three strings
         
         if(case ==1):
-            rd = format(int(line[0]), n)    # make rd into 2-bit binary format
+            rd = format(int(line[0]), n)    # make rd into n-bit binary format
             if(n2==0):
                 ra = format(int(line[1]), n)    # make ra 2-bit binary format
                 print(op + rd + ra + "\n") # update screen and output file
-                output_file.write(op + rd+ ra + "\n")
-                adder(rd,ra, 0)
+                adder(rd,ra, ones)
             if(n2==1):
                 print(op + rd + "\n") # update screen and output file
-                adder(0,imm, 0)
+                adder(rd,rd, ones)
              
         elif(case == 2):
             if(line[1][0] == '-'):          # 2's complement conversion for negatives
@@ -43,7 +44,7 @@ for line in input_file:
             imm = format(int(line[1]), n2)  # make imm into n2-bit binary format
             print(op + rd + imm + "\n")
             output_file.write(op + rd + imm + "\n")
-            adder(rd,imm, 0)
+            adder(rd,imm, ones)
 
                 
     def foo2(op, n, case, line):
@@ -51,87 +52,75 @@ for line in input_file:
             line = line.split('B')
             if(line[1][0] == '-'):               
                 line[1] = line[1].replace("-","")
-                line[1] = 0b11111 - int(line[1]) + 1
+                line[1] = 0b1111 - int(line[1]) + 1
         elif(case==2):
-            line = line.split('BZ')
+            line = line.split('J')
             if(line[1][0] == '-'):               
                 line[1] = line[1].replace("-","")
                 line[1] = 0b1111 - int(line[1]) + 1
-        elif(case==3):
-            line = line.split('j')
-            if(line[1][0] == '-'):               
-                line[1] = line[1].replace("-","")
-                line[1] = 0b11111 - int(line[1]) + 1   
 
         imm = format(int(line[1]), n)   # make imm into 5-bit binary format
-        print(op +imm + "\n")     
+        print(op + imm + "\n")     
         output_file.write(op + imm + "\n")
-        adder(0,imm, 0)
-          
+        adder(ones,imm, ones)
+    
     if (line == "\n"):              # empty lines ignored
         continue
     
     line = line.replace("\n","")    # remove 'endline' character
     print(line) 
     line = line.replace(" ","")     # remove spaces anywhere in line
+    ones = 0                        #counts all 1's in machineCode
        
-    if(line[0:4] == 'LOAD'):
+    if(line[0:4] == "LOAD"):
         x = 'LOAD'
-        op = "011"
+        op = "1010"
         num_bits = "02b"
         case =1
+        ones = ones + 2
         foo(x, op, line, num_bits,0,case)            
         
-    elif(line[0:3] == 'STR'):               
+    elif(line[0:3] == "STR"):               
         x = 'STR'
-        op ="100"
+        op ="1011"
         num_bits = "02b"
         case=1
+        ones = ones + 3
         foo(x, op, line, num_bits,0,case)
 	
-    elif(line[0:4] == 'INIT'):		   
-        x = 'INIT'
-        op ="010"
-        num_bits1 = "03b"
-        num_bits2 ="01b"
-        case=2
-        foo(x, op, line, num_bits1, num_bits2,case)
+    elif(line[0:4] == "COMP"):		   
+        x = 'COMP'
+        op ="11011"
+        num_bits1 = "02b"
+        case=1
+        ones = ones + 4
+        foo(x, op, line, num_bits1, 1,case)
         
     elif(line[0:4] == "ADDI"):             
         x = 'ADDI'
-        op ="00"
+        op ="001"
         num_bits1 = "02b"
-        num_bits2 ="03b"
+        num_bits2 ="02b"
         case=2
+        ones = ones + 1
         foo(x, op, line, num_bits1, num_bits2,case)
 
-    elif(line[0:4] == "COMP"):               
-        x = 'COMP'
-        op ="1111"
-        num_bits1 = "03b"
-        case=1
-        foo(x, op, line, num_bits1,1,case)
-
-    elif(line[0:3] == "MOV"):               
-        x = "MOV"
-        op = "1"
-        num_bits = "03b"
-        case=1
-        foo(x, op, line, num_bits,0, case)
+    elif(line[0:3] == "ADD"):            
+        x = "ADD"
+        op = "000"
+        num_bits1 = "02b"
+        num_bits2 = "02b"
+        case = 2
+        foo(x, op, line, num_bits1,num_bits2,case)
 
     elif(line[0:3] == "SLT"):              
         x = "SLT"
-        op = "0"
-        num_bits = "03b"
-        case=1
-        foo(x, op, line, num_bits,0, case)
-        
-    elif(line[0:3] == "ADD"):            
-        x = "ADD"
-        op = "110"
-        num_bits = "02b"
-        case=1
-        foo(x, op, line, num_bits,0,case)
+        op = "010"
+        num_bits1 = "02b"
+        num_bits2 = "02b"
+        case = 2
+        ones = ones + 1
+        foo(x, op, line, num_bits1,num_bits2, case)
         
     elif(line[0:3] == "LSL"):               
         x = 'LSL'
@@ -139,25 +128,46 @@ for line in input_file:
         num_bits1 = "02b"
         num_bits2 ="03b"
         case=2
+        ones = ones + 2
         foo(x, op, line, num_bits1, num_bits2,case)
         
-    elif(line[0:2] == "BZ"):
-        op ="101"
-        n ="04b"
-        case=2
-        foo2(op, n, case, line)
+    elif(line[0:3] == "EQZ"):
+        x = "EQZ"
+        op ="11010"
+        num_bits1 = "02b"
+        case = 1
+        ones = ones + 3
+        foo(x, op, line, num_bits1, 1,case)
 
     elif(line[0:1] == "B"):
-        op ="10"
-        n ="05b"
-        case=1
+        op = "100"
+        n = "04b"
+        case = 1
+        ones = ones + 1
+        foo2(op, n, case, line)
+        
+    elif(line[0:1] == "J"):
+        op = "011"
+        n = "04b"
+        case = 2
+        ones = ones + 2
         foo2(op, n, case, line)
 
-    elif(line[0:1] == "j"):
-        op ="11"
-        n ="05b"
-        case=3
-        foo2(op, n, case, line) 
+    #elif(line[0:4] == "PUSH"):		   
+        #x = 'PUSH'
+        #op ="11011"
+        #num_bits1 = "02b"
+        #case=1
+        #ones = ones + 4
+        #foo(x, op, line, num_bits1, 1,case)
+
+    #elif(line[0:4] == "PULL"):		   
+        #x = 'PULL'
+        #op ="11011"
+        #num_bits1 = "02b"
+        #case=1
+        #ones = ones + 4
+        #foo(x, op, line, num_bits1, 1,case)
 
     elif(line[0:3] == "END"):          
         line = line.replace("END","")       
