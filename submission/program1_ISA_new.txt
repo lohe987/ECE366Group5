@@ -1,0 +1,85 @@
+# Group 5
+# Joseph de Joya
+# Martin Cardona	
+# Alberto Espinoza
+# Last Updated: 10/05/2018
+
+# Program 1: Calculate R = 6^P mod Q
+# Approach: Using a property of modular arithmetic (a*b) mod q = ((a mod q) * (b mod q)) mod q
+# I will use the algorithm below to get the result c = b^p mod q. Where c is the result, b is
+# the base, p is the exponent, and  q is the modular divisor.
+# (1) set c = 1 and p' = 0
+# (2) p' = p' + 1
+# (3) c = (b * c) mod q
+# (4) If p' < p go back to step (2), else c is the solution.
+
+
+# Data Memory
+# Addr	|	Content
+# 0		|	P
+# 1		|	Q
+# 2		|	R
+# ...	|	...
+
+# ISA implementation
+# All registers are initialized to 0.
+
+# Load P and Q
+	ADDI	$R0, 1			# $R0 = 0 + 1
+	LOAD	$R3, $R0		# $R3 = MEM[$R0] = MEM[1] = Q
+	STSH	$R2				# $SR2 = $R2, stash P to a special register
+
+# Step (1)
+# Note: $R0 = 1, let $R0 = c = 1
+# 		$R1 = 0, let $R1 = p' = 0
+
+# Step (2)
+	ADDI	$R1, 1			# p' <- p' + 1
+
+# Step (3): c = 6c mod Q = (4 + 2)c mod Q = (4c + 2c) mod Q
+	RST		$R2			# $R2 = 0
+	LSL		$R0			# $R0 = c * 2 = 2c
+	ADD		$R2, $R0	# $R2 = 0 + 2c = 2c
+	LSL		$R0			# $R0 = 2c * 2 = 4c
+	ADD		$R2, $R0	# $R2 = 4c + 2c = 6c
+
+	# INTERMEDIATE JUMPS
+	J		2			# PC = PC + 2, go down 2 instructions from here
+	J		-6			# Go back to step (2)
+	# INTERMEDIATE JUMPS
+
+	RST		$R0			# $R0 = 0
+	ADD		$R0, $R2	# $R0 = $R2 = 6c
+	RST		$R2			# $R2 = 0
+	ADD		$R2, $R3	# Note: $R3 is still Q, thus $R2 = 0 + $R3 = 0 + Q = Q
+	COMP	$R2			# $R2 = -Q
+	J		3			# PC = PC + 3, go to mod_loop
+
+	# INTERMEDIATE JUMPS
+	J		-7			# Go back to step (2)
+	# INTERMEDIATE JUMPS
+	
+# cond_update
+	ADD		$R0, $R2	# c <- c - Q
+
+# mod_loop	
+	SLT		$R0, $R3	# If c < Q then $branch = 1, else $branch = 0
+	B		3			# If $branch = 1, move to step4, else continue 
+	J		-3			# Move back 3 instructions, (cond_update)
+
+	# INTERMEDIATE JUMPS
+	J		-5			# Go back to step (2)
+	# INTERMEDIATE JUMPS
+
+
+# Step (4) Note: At this point c <- c mod Q
+	RCVR	$R2			# $R2 = $SR2 = P
+	SLT		$R1, $R2	# If p' < P then $branch = 1, else $branch = 0
+	B		-3			# Go back to step (2)
+
+# At this Point R = $R0 = c = 6^P mod Q, hence store R in designated data memory address
+	RST		$R1			# $R1 = 0
+	ADDI	$R1, -2		# $R1 = -2
+	COMP	$R1			# $R1 = 2
+	STR		$R0, $R1	# MEM[$R1] = MEM[2] = R = $R0 = c
+	END					# End program, PC = PC
