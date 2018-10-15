@@ -1,0 +1,27 @@
+# Program 1: Calculate R = 6^P mod Q
+# Approach: Using a property of modular arithmetic (a*b) mod q = ((a mod q) * (b mod q)) mod q
+# I will use the algorithm below to get the result c = b^p mod q. Where c is the result, b is
+# the base, p is the exponent, and  q is the modular divisor.
+# (1) set c = 1 and p' = 0
+# (2) p' = p' + 1
+# (3) c = (b * c) mod q
+# (4) If p' < p go back to step (2), else c is the solution.
+
+#load P and Q
+00010001   #$R0 = 1
+01010110   #$R3 = MEM[$R0] = MEM[1] = Q
+11111010   #$SR2 = $R2, Stash P to a special register
+
+#step 1;  Note $R0 = 1, let $r0 = c = 1
+#R1 = 0, let $R1 = p' =0
+
+#step 2
+00010101   #p' <- p'+ 1
+
+#step 3: c = 6c mod Q = (4+2)c mod Q = (4c + 2c) mod Q
+11110110   #$R2 = 0, Resets previous value
+01100000   #R0 = c*2= 2c
+10001000   #R2 = 0 + 2c = 2c
+01100000   #$R0 = 2c* 2 = 4c
+10001000   #R2 = 4c + 2c = 6c
+
