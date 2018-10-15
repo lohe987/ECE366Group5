@@ -1,7 +1,6 @@
 #Dissassembler for machine code to ISA architecture
 print("------------")
 input_file = open("MIPS_machine_code.txt","r")  #Reads MachineCode here
-output_file = open("MIPS_asm.txt", "w")         #Writes ISA code here
 
 for line in input_file:
     if (line == "\n"):              # empty lines ignored
@@ -53,13 +52,19 @@ for line in input_file:
         ra = format(int(line[7:8],2))
         print(op + " $R" + rd + ", $R" + ra + "\n")
         
+    elif(line[1:6] =='11001'):
+        op ="XOR"
+        rd = format(int(line[6:7], 2))
+        ra = format(int(line[7:8],2))
+        print(op + " $R" + rd + ", $R" + ra + "\n")
+        
     elif(line[1:5] =='1011'):
-        op ="STORE"
+        op ="STR"
         rd = format(int(line[5:7], 2))
         ra = format(int(line[7:8],2))
         print(op + " $R" + rd + ", $R" + ra + "\n")
         
-    elif(line[1:5] =='1100'):
+    elif(line[1:5] =='11000'):
         op ="LSL"
         rd = format(int(line[5:7],2))
         if(line[7][0] =='1'):       #If imm is negative, convert to decimal
@@ -71,6 +76,21 @@ for line in input_file:
         
     elif(line[1:6] =='11010'):
         op ="EQZ"
+        rd = format(int(line[6:8], 2))          
+        print(op + " $R" + rd + "\n")
+        
+    elif(line[1:6] =='11110'):
+        op ="STSH"
+        rd = format(int(line[6:8], 2))          
+        print(op + " $R" + rd + "\n")
+        
+    elif(line[1:6] =='11100'):
+        op ="RCV"
+        rd = format(int(line[6:8], 2))          
+        print(op + " $R" + rd + "\n")
+
+    elif(line[1:6] =='11101'):
+        op ="RST"
         rd = format(int(line[6:8], 2))          
         print(op + " $R" + rd + "\n")
         
@@ -88,7 +108,7 @@ for line in input_file:
         op ="PULL"
         rd = format(int(line[6:8], 2))
         print(op + " $R" + rd + "\n")
-        
+       
     elif(line[0:8] =='11111111'):
         print("End" + "\n")
         
@@ -96,4 +116,3 @@ for line in input_file:
         print("Skip - Unknown line")
 
 input_file.close()
-output_file.close()
