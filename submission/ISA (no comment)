@@ -7,23 +7,23 @@ LSL	$R0
 ADD	$R2, $R0	
 LSL	$R0			
 ADD	$R2, $R0
-J	2			 
-J -6
+J	  2			 
+J   -6
 RST	$R0			
 ADD	$R0, $R2	
 RST	$R2			
 ADD	$R2, $R3	
 COMP	$R2			
-J	3
-J -7
+J	  3
+J   -7
 ADD	$R0, $R2
 SLT	$R0, $R3
-B	3
-J -3
-J -5	
+B	  3
+J   -3
+J   -5	
 RCVR	$R2
 SLT	$R1, $R2
-B -3
+B   -3
 RST	$R1
 ADDI	$R1, -2
 COMP	$R1
