@@ -1,0 +1,111 @@
+#Dissassembler for machine code to ISA architecture
+print("------------")
+input_file = open("MIPS_machine_code.txt","r")  #Reads MachineCode here
+
+for line in input_file:
+    if (line == "\n"):              # empty lines ignored
+        continue
+
+    line = line.replace("\n","")    # remove 'endline' character
+    line = line.replace(" ","")     # remove spaces anywhere in line
+
+    if(line[1:4] =='000'):          #3 bit op-code for ADD
+        op ="ADD"
+        rd = format(int(line[4:6], 2))   #converts to decimal
+        ra = format(int(line[6:8],2))
+        print(op + " $R" + rd + ", $R" + ra+ "\n")  #prints ISA code
+
+    elif(line[1:4] == '001'):
+        op ="ADDI"
+        rd = format(int(line[4:6], 2))
+        if(line[6][0] =='1'):       #check if sign bit is 1
+            ra = int(line[6:8],2)    
+            ra = format(ra - 4)  #convert 2's compliment to decimal
+        else:
+            ra = format(int(line[6:8],2))   #if sign bit is 0   
+        print(op + " $R" + rd + ", $R" + ra + "\n")
+        
+    elif(line[1:4] =='010'):
+        op ="SLT"
+        rd = format(int(line[4:6], 2))
+        ra = format(int(line[6:8],2))
+        print(op + " $R" + rd + ", $R" + ra + "\n")
+
+    elif(line[1:4] =='100'):
+        op ="B"
+        if(line[4][0] =='1'):       #check if sign bit is 1
+            imm = int(line[4:8],2)    
+            imm = format(imm - 16)  #convert 2's compliment to decimal
+        else:
+            imm = format(int(line[4:8],2))   #if sign bit is 0          
+        print(op + " " + imm + "\n")
+
+    elif(line[1:4] =='011'):
+        op ="J"
+        if(line[4][0] =='1'):       
+            imm = int(line[4:8],2)      
+            imm = format(imm - 16)
+        else:
+            imm = format(int(line[4:8],2))            
+        print(op + " " + imm + "\n")
+        
+    elif(line[1:5] =='1010'):
+        op ="LOAD"
+        rd = format(int(line[5:7], 2))
+        ra = format(int(line[7:8],2))
+        print(op + " $R" + rd + ", $R" + ra + "\n")
+        
+    elif(line[1:6] =='11001'):
+        op ="XOR"
+        rd = format(int(line[6:7], 2))
+        ra = format(int(line[7:8],2))
+        print(op + " $R" + rd + ", $R" + ra + "\n")
+        
+    elif(line[1:5] =='1011'):
+        op ="STR"
+        rd = format(int(line[5:7], 2))
+        ra = format(int(line[7:8],2))
+        print(op + " $R" + rd + ", $R" + ra + "\n")
+        
+    elif(line[1:6] =='11000'):
+        op ="LSL"
+        rd = format(int(line[5:7],2))
+        if(line[7][0] =='1'):       #If imm is negative, convert to decimal
+            imm = int(line[7:8],2)      
+            imm = format(imm - 2)
+        else:
+            imm = format(int(line[7:8],2))            
+        print(op + " $R" + rd + ", " + imm + "\n")
+        
+    elif(line[1:6] =='11010'):
+        op ="EQZ"
+        rd = format(int(line[6:8], 2))          
+        print(op + " $R" + rd + "\n")
+        
+    elif(line[1:6] =='11110'):
+        op ="STSH"
+        rd = format(int(line[6:8], 2))          
+        print(op + " $R" + rd + "\n")
+        
+    elif(line[1:6] =='11100'):
+        op ="RCV"
+        rd = format(int(line[6:8], 2))          
+        print(op + " $R" + rd + "\n")
+
+    elif(line[1:6] =='11101'):
+        op ="RST"
+        rd = format(int(line[6:8], 2))          
+        print(op + " $R" + rd + "\n")
+        
+    elif(line[1:6] =='11011'):
+        op ="COMP"
+        rd = format(int(line[6:8], 2))          
+        print(op + " $R" + rd + "\n")
+
+    elif(line[0:8] =='11111111'):
+        print("End" + "\n")
+        
+    else:
+        print("Skip - Unknown line")
+
+input_file.close()
