@@ -8,10 +8,10 @@
 # (4) If p' < p go back to step (2), else c is the solution.
 
 # Data Memory
-# Addr  |	Content
-# 0     |	P
-# 1		  |	Q
-# 2		  |	R
+# Addr  | Content
+# 0     | P
+# 1     | Q
+# 2     | R
 # ...	  |	...
 
 #load P and Q
