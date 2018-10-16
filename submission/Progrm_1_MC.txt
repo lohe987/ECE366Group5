@@ -25,11 +25,40 @@
 01100000   #$R0 = 2c* 2 = 4c
 10001000   #R2 = 4c + 2c = 6c
 
-#intermediate jumps
+#intermediate jumps(allows us to access step 2 by going through memory)
 10110010   #PC = PC + 2, go down 2 instructions 
-00111100   #Go back to step 2
+10011010   #Go back to step 2
 
 #intermediate jumps
 01110100   #$R0 = 0
 10000010   #$R0 = $R2  = 6c
 11110110   #$R2 = 0
+10001011   #Note: $R3 is still Q, thus $R2 = 0  + $R3 = 0 + Q = Q
+11101110   #$R2 = -Q
+10110011   #PC = PC + 3, go to mod_loop
+
+#intermediate jumps(allows us to access step 2 by going through memory)
+10011001   #Go back to step 2
+
+#cond_update(checks current integer)
+10000010   #c <- c - Q
+
+#mod_loop 
+10100011   #If c < Q then $branch = 1, else $branch = 0
+11000011   #If $branch =  1, move to step 4, else continue
+10111101   #Move back 3 instructions, (cond_update)
+
+#intermediate jumps
+10111011   #Go back to step 2
+
+#step 4 Note: At this point c < -c mod Q
+01110010  #$R2 = $SR2 = P   Note:$SR2 is a special register
+10100110  #If p' < P then $branch = 1, else $branch = 0
+01001101  #Go back to step 2
+
+#At this point R = $R0 = c = 6^P mod Q, hence store R in designated data memory address
+11110101  #$R1 = 0
+10010110  #R1 = -2
+11101101  #$R1 = 2
+01011001  #MEM[$R1] = MEM[2] + R = $R0 =c
+#END      #Ends program
