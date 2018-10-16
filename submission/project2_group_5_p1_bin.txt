@@ -23,7 +23,7 @@
 #R1 = 0, let $R1 = p' =0
 
 #step 2
-00010101   #p' <- p'+ 1
+10010101   #p' <- p'+ 1
 
 #step 3: c = 6c mod Q = (4+2)c mod Q = (4c + 2c) mod Q
 11110110   #$R2 = 0, Resets previous value
@@ -42,7 +42,7 @@
 11110110   #$R2 = 0
 10001011   #Note: $R3 is still Q, thus $R2 = 0  + $R3 = 0 + Q = Q
 11101110   #$R2 = -Q
-10110011   #PC = PC + 3, go to mod_loop
+00110011   #PC = PC + 3, go to mod_loop
 
 #intermediate jumps(allows us to access step 2 by going through memory)
 10011001   #Go back to step 2
