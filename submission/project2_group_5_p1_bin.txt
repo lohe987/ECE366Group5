@@ -45,7 +45,7 @@
 00110011   #PC = PC + 3, go to mod_loop
 
 #intermediate jumps(allows us to access step 2 by going through memory)
-10011001   #Go back to step 2
+00111001   #Go back to step 2
 
 #cond_update(checks current integer)
 10000010   #c <- c - Q
