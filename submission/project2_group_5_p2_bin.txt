@@ -50,9 +50,9 @@
 	# After this block, $R0, $R1, $R3 can be reused.
       01110100    # $R0 = 0
       00100001    # If 0 < n then $branch = 1, else $branch = 0
-      01000010    # PC = PC + 2, go forward two instructions
-      00110110    # PC = PC + 5, jump to done
-
+      01000100    # PC = PC + 4, go forward 4 instructions
+      00110010    # jump to done
+-----------------------------------------
       # Check for matched bits.
       10000010    # $R0 = $R2 = addr of an element in Pattern_Array
       11010010    # $R1 = Pattern_Array[$R0]
