@@ -21,7 +21,7 @@ for line in input_file:
         rd = format(int(line[4:6], 2))
         if(line[6][0] =='1'):                #check if MSB in imm is 1
             imm = int(line[6:8],2)    
-            imm = format(ra - 4)             #convert 2's compliment to decimal
+            imm = format(imm - 4)             #convert 2's compliment to decimal
         else:
             imm = format(int(line[6:8],2))   #if MSB in imm is 0   
         print(op + " $R" + rd + ", " + imm + "\n")
