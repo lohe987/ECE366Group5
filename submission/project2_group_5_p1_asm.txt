@@ -2,7 +2,7 @@
 # Joseph de Joya
 # Martin Cardona	
 # Alberto Espinoza
-# Last Updated: 10/05/2018
+# Last Updated: 10/17/2018
 
 # Program 1: Calculate R = 6^P mod Q
 # Approach: Using a property of modular arithmetic (a*b) mod q = ((a mod q) * (b mod q)) mod q
@@ -25,6 +25,7 @@
 # All registers are initialized to 0.
 
 # Load P and Q
+	LOAD	$R2, $R0		# $R2 = MEM[$R0] = MEM[0] = P
 	ADDI	$R0, 1			# $R0 = 0 + 1
 	LOAD	$R3, $R0		# $R3 = MEM[$R0] = MEM[1] = Q
 	STSH	$R2			# $SR2 = $R2, stash P to a special register
@@ -59,10 +60,10 @@
 	J	-7			# Go back to step (2)
 	
 # cond_update
-	ADD	$R0, $R2		# c <- c - Q
+	ADD	$R0, $R2	# c <- c - Q
 
 # mod_loop	
-	SLT	$R0, $R3		# If c < Q then $branch = 1, else $branch = 0
+	SLT	$R0, $R3	# If c < Q then $branch = 1, else $branch = 0
 	B	3			# If $branch = 1, move to step4, else continue 
 	J	-3			# Move back 3 instructions, (cond_update)
 
