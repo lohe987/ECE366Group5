@@ -88,12 +88,14 @@
 	LSL		$R0		# $R0 = $R0 << 1
 
 	# INTERMEDIATE JUMP
-	J		7			# PC = PC + 3, jump 3 instructions forward
-	J		5			# jump to done
+	J		4			# PC = PC + 4, jump 4 instructions forward
+	J		7			# jump to done
 	J		-7			# go to loop_match
-	J		-5			# go to loop_count
-	J		-5			# go to loop_no_count
-	J		-3			# go to loop_match
+	J		6			# go to start_count
+	J		5			# PC = PC + 5, jump 5 instructions forward
+	J		-7			# go to loop_count
+	J		-7			# go to loop_no_count
+	J		-5			# go to loop_match
 	J		7			# jump to done
 	# INTERMEDIATE JUMP
 
@@ -127,7 +129,7 @@
 	ADD		$R1, $R3	# $R1 = $R3 <- move matched bit count
 
 	# INTERMEDIATE JUMP
-	J		3			# PC = PC + 2, jump two instructions forward
+	J		3			# PC = PC + 3, jump two instructions forward
 	J		-7			# go to loop_match
 	J		7			# go to done
 	# INTERMEDIATE JUMP
@@ -137,7 +139,7 @@
 	B		3			# go to update_best_match
 
 	# INTERMEDIATE JUMP
-	J		4			# PC = PC + 3, jump two instructions forward
+	J		4			# PC = PC + 4, jump two instructions forward
 	J		-6			# go to loop_match
 	J		6			# go to update_best_match
 	J		6			# go to done
@@ -148,7 +150,7 @@
 	ADD		$R1, $R2	# $R1 = $R1 - $R2
 
 	# INTERMEDIATE JUMP
-	J		4			# PC = PC + 3, jump two instructions forward
+	J		4			# PC = PC + 4, jump two instructions forward
 	J		-6			# go to loop_match
 	J		5			# go to update_best_match
 	J		5			# go to done
@@ -187,7 +189,7 @@
 	STSH	$R2			# $SR2 = $R2, best_match_score updated
 
 	# INTERMEDIATE JUMP
-	J		4			# PC = PC + 2, jump two instructions forward
+	J		4			# PC = PC + 4, jump two instructions forward
 	J		5			# go to update_best_match_count
 	J		-7			# go to prep_loop
 	J		7			# go to done
