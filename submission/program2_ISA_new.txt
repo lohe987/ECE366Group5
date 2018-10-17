@@ -2,7 +2,7 @@
 # Joseph de  Joya
 # Martin Cardona
 # Alberto Espinoza
-# Last Updated: 10/08/2018
+# Last Updated: 10/17/2018
 
 # Program 2: Best Match Count
 
@@ -52,23 +52,34 @@
 	# After this block, $R0, $R1, $R3 can be reused.
 	RST		$R0			# $R0 = 0
 	SLT		$R0, $R1	# If 0 < n then $branch = 1, else $branch = 0
-	B		2			# PC = PC + 2, go forward two instructions
-	J		6			# PC = PC + 5, jump to done
+	B		4			# PC = PC + 4, go forward 4 instructions
+	J		2			# jump to done
 
+	# INTERMEDIATE JUMP
+	J		-8			# go to loop_match
+	J		7			# jump to done
 	# Check for matched bits.
+
 	ADD		$R0, $R2	# $R0 = $R2 = addr of an element in Pattern_Array
 	LOAD	$R1, $R0	# $R1 = Pattern_Array[$R0]
 	RCVR	$R0			# $R0 = $SR0 = T
 	NXOR	$R0, $R1	# $R0 = $R0 bitwise not xor (equivalence) $R1
 
 	# INTERMEDIATE JUMP
-	J		2			# PC = PC + 2, jump two instructions forward
-	J		7			# PC = PC + 6, jump to done
+	J		3			# PC = PC + 3, jump 3 instructions forward
+	J		-7			# go to loop_match
+	J		5			# jump to done
 	# INTERMEDIATE JUMP
 
 	RST		$R3			# $R3 = counter = 0
 	RST		$R1			# $R1 = 0
-	J		5			# go to start_count
+	J		3			# go to start_count
+
+	# INTERMEDIATE JUMP
+	J		-5			# go to loop_match
+	J		5			# jump to done
+	J		6			# go to start_count
+	# INTERMEDIATE JUMP
 
 # loop_count
 	ADDI	$R3, 1		# $R3 = counter = $R3 + 1
@@ -77,23 +88,29 @@
 	LSL		$R0, 1		# $R0 = $R0 << 1
 
 	# INTERMEDIATE JUMP
-	J		2			# PC = PC + 2, jump two instructions forward
-	J		6			# PC = PC + 6, jump to done
+	J		7			# PC = PC + 3, jump 3 instructions forward
+	J		5			# jump to done
+	J		-7			# go to loop_match
+	J		-5			# go to loop_count
+	J		-5			# go to loop_no_count
+	J		-3			# go to loop_match
+	J		7			# jump to done
 	# INTERMEDIATE JUMP
 
 # start_count
 	# Check if counting is done.
 	EQZ		$R0			# If $R0 == 0 then $branch = 1, else $branch = 0	
-	B		count_done
+	B		6			# go to count_done
 
 	# Note: $R3 = matched bit counter, $R1 = 0
 	# Check wether there is matched bit or not.
 	SLT		$R0, $R1	# If $R0 < 0 then $branch = 1, else $branch =  0
-	B		loop_count		
-	J		loop_no_count
+	B		-7			# go to loop_count		
+	J		-7			# go to loop_no_count
 
 	# INTERMEDIATE JUMP
-	J		6			# PC = PC + 5, jump five instructions forward
+	J		-7			# go to loop_match
+	J		7			# go to done
 	# INTERMEDIATE JUMP
 
 # count_done
@@ -110,28 +127,44 @@
 	ADD		$R1, $R3	# $R1 = $R3 <- move matched bit count
 
 	# INTERMEDIATE JUMP
-	J		2			# PC = PC + 2, jump two instructions forward
-	J		5
+	J		3			# PC = PC + 2, jump two instructions forward
+	J		-7			# go to loop_match
+	J		7			# go to done
 	# INTERMEDIATE JUMP
 
 	RCVR	$R2			# $R2 = current best match score
 	SLT		$R2, $R1	# If $R2 < $R1 then $branch = 1, else $branch = 0
-	B		update_best_match
+	B		3			# go to update_best_match
 
 	# INTERMEDIATE JUMP
-	J		2			# PC = PC + 2, jump two instructions forward
-	J		6
+	J		4			# PC = PC + 3, jump two instructions forward
+	J		-6			# go to loop_match
+	J		6			# go to update_best_match
+	J		6			# go to done
 	# INTERMEDIATE JUMP
 	
 	# Check if current pattern is a best match, if it is then update best_match_score
 	COMP	$R2			# $R2 = -$R2
 	ADD		$R1, $R2	# $R1 = $R1 - $R2
-	EQZ		$R1			# If $R1 == 0 then $branch = 1, else $branch = 0
-	B		6			# go to update_best_match_count
 
 	# INTERMEDIATE JUMP
-	J		2			# PC = PC + 2, jump two instructions forward
-	J		4
+	J		4			# PC = PC + 3, jump two instructions forward
+	J		-6			# go to loop_match
+	J		5			# go to update_best_match
+	J		5			# go to done
+	# INTERMEDIATE JUMP
+
+	EQZ		$R1			# If $R1 == 0 then $branch = 1, else $branch = 0
+	B		5			# go to update_best_match_count
+
+	# INTERMEDIATE JUMP
+	J		7			# PC = PC + 7, jump 7 instructions forward
+	J		5			# go to update_best_match
+	J		3			# go to done
+	J		-8			# go to loop_match
+	J		6			# go to update_best_match_count
+	J		7			# go to done
+	J		7			# go to update_best_match
 	# INTERMEDIATE JUMP
 
 # prep_loop
@@ -139,12 +172,12 @@
 	# This addr is temporarily held by $R0
 	RST		$R2			# $R2 = 0
 	ADD		$R2, $R0	# $R2 = addr of an element in the Pattern_Array
-	J		loop_match
+	J		-6			# loop_match
 
 	# INTERMEDIATE JUMP
-	J		3			# go to update_best_match_count
-	J		-3			# PC = PC - 3, go to prep_loop
-	J		5
+	J		7			# go to update_best_match_count
+	J		-4			# go to prep_loop
+	J		7			# go to done
 	# INTERMEDIATE JUMP
 
 # update_best_match
@@ -154,9 +187,10 @@
 	STSH	$R2			# $SR2 = $R2, best_match_score updated
 
 	# INTERMEDIATE JUMP
-	J		2			# PC = PC + 2, jump two instructions forward
-	J		-6			# PC = PC - 6, go to prep_loop
-	J		7
+	J		4			# PC = PC + 2, jump two instructions forward
+	J		5			# go to update_best_match_count
+	J		-7			# go to prep_loop
+	J		7			# go to done
 	# INTERMEDIATE JUMP
 
 	RST		$R3			# $R3 = 0
