@@ -1,0 +1,220 @@
+# Group 5
+# Joseph de  Joya
+# Martin Cardona
+# Alberto Espinoza
+# Last Updated: 10/17/2018
+
+# Program 2: Best Match Count
+
+# Data Memory
+# Addr	|	Content
+# 0		|	
+# ...	|	...
+# 3		|	T
+# 4		|	S = best match score
+# 5		|	C = best match count
+# ...	|	...
+# 7		|	n = Number of elements in Pattern_Array
+# 8		|	Pattern_Array[1]
+# 9		|	Pattern_Array[2]
+# ...	|	...
+# 107	|	Pattern_Array[100]
+
+# ISA Implementation
+	
+	# Notes: Let $SR2 track the best matching score
+	# Notes: Let $SR3 track the best matching count
+
+	# Setting up
+	ADDI	$R1, 1		# $R1 = 0 + 1 = 1
+	ADDI	$R1, 1		# $R1 = 1 + 1 = 2
+	ADDI	$R1, 1		# $R1 = 2 + 1 = 3
+	LOAD	$R0, $R1	# $R0 = MEM[$R1] = MEM[3] = T
+
+	LSL		$R1			# $R1 = 3 * 2 = 6
+	ADDI	$R1, 1		# $R1 = 6 + 1 = 7
+	LOAD	$R1, $R1	# $R1 = MEM[$R1] = MEM[7] = n
+
+	STSH	$R0			# $SR0 = $R0 = T
+	STSH	$R1			# $SR1 = $R1 = n
+	ADDI	$R2, 1		# $R2 = 7 + 1 = 8, addr of the first element in Pattern_Array
+	J		5			# go to start_match
+
+# loop_match
+	RCVR	$R1			# $R1 = $SR1 = n
+	ADDI	$R1, -1		# $R1 = n' = n - 1
+	STSH	$R1			# $SR1 = $R1 = n
+	ADDI	$R2, 1		# $R2 = addr of the next element in Pattern_Array
+
+# start_match
+	# Check if all elements in Pattern_Array have been checked.
+	# Note: $R2 will contain an addr for an element in Pattern_Array (must not be changed).
+	# After this block, $R0, $R1, $R3 can be reused.
+	RST		$R0			# $R0 = 0
+	SLT		$R0, $R1	# If 0 < n then $branch = 1, else $branch = 0
+	B		4			# PC = PC + 4, go forward 4 instructions
+	J		2			# jump to done
+
+	# INTERMEDIATE JUMP
+	J		-8			# go to loop_match
+	J		7			# jump to done
+	# Check for matched bits.
+
+	ADD		$R0, $R2	# $R0 = $R2 = addr of an element in Pattern_Array
+	LOAD	$R1, $R0	# $R1 = Pattern_Array[$R0]
+	RCVR	$R0			# $R0 = $SR0 = T
+	NXOR	$R0, $R1	# $R0 = $R0 bitwise not xor (equivalence) $R1
+
+	# INTERMEDIATE JUMP
+	J		3			# PC = PC + 3, jump 3 instructions forward
+	J		-7			# go to loop_match
+	J		5			# jump to done
+	# INTERMEDIATE JUMP
+
+	RST		$R3			# $R3 = counter = 0
+	RST		$R1			# $R1 = 0
+	J		3			# go to start_count
+
+	# INTERMEDIATE JUMP
+	J		-5			# go to loop_match
+	J		5			# jump to done
+	J		6			# go to start_count
+	# INTERMEDIATE JUMP
+
+# loop_count
+	ADDI	$R3, 1		# $R3 = counter = $R3 + 1
+
+# loop_no_count
+	LSL		$R0		# $R0 = $R0 << 1
+
+	# INTERMEDIATE JUMP
+	J		4			# PC = PC + 4, jump 4 instructions forward
+	J		7			# jump to done
+	J		-7			# go to loop_match
+	J		6			# go to start_count
+	J		5			# PC = PC + 5, jump 5 instructions forward
+	J		-7			# go to loop_count
+	J		-7			# go to loop_no_count
+	J		-5			# go to loop_match
+	J		7			# jump to done
+	# INTERMEDIATE JUMP
+
+# start_count
+	# Check if counting is done.
+	EQZ		$R0			# If $R0 == 0 then $branch = 1, else $branch = 0	
+	B		6			# go to count_done
+
+	# Note: $R3 = matched bit counter, $R1 = 0
+	# Check wether there is matched bit or not.
+	SLT		$R0, $R1	# If $R0 < 0 then $branch = 1, else $branch =  0
+	B		-7			# go to loop_count		
+	J		-7			# go to loop_no_count
+
+	# INTERMEDIATE JUMP
+	J		-7			# go to loop_match
+	J		7			# go to done
+	# INTERMEDIATE JUMP
+
+# count_done
+	# Notes: $R3 = number of matched bits for Pattern_Array[$R2]
+	# $R0 and $R1 can be reused at this point.
+	# $SR0 = Target pattern T
+	# $SR1 = number of elements left in Pattern_Array that needs to be checked.
+	# $SR2 = tracker for best match score
+	# $SR3 = tracker for best match count
+
+	RST		$R0			# $R0 = 0
+	RST		$R1			# $R1 = 0
+	ADD		$R0, $R2	# $R0  = $R2 <- temporarily store the addr an element in the Pattern_Array
+	ADD		$R1, $R3	# $R1 = $R3 <- move matched bit count
+
+	# INTERMEDIATE JUMP
+	J		3			# PC = PC + 3, jump two instructions forward
+	J		-7			# go to loop_match
+	J		7			# go to done
+	# INTERMEDIATE JUMP
+
+	RCVR	$R2			# $R2 = current best match score
+	SLT		$R2, $R1	# If $R2 < $R1 then $branch = 1, else $branch = 0
+	B		3			# go to update_best_match
+
+	# INTERMEDIATE JUMP
+	J		4			# PC = PC + 4, jump two instructions forward
+	J		-6			# go to loop_match
+	J		6			# go to update_best_match
+	J		6			# go to done
+	# INTERMEDIATE JUMP
+	
+	# Check if current pattern is a best match, if it is then update best_match_score
+	COMP	$R2			# $R2 = -$R2
+	ADD		$R1, $R2	# $R1 = $R1 - $R2
+
+	# INTERMEDIATE JUMP
+	J		4			# PC = PC + 4, jump two instructions forward
+	J		-6			# go to loop_match
+	J		5			# go to update_best_match
+	J		5			# go to done
+	# INTERMEDIATE JUMP
+
+	EQZ		$R1			# If $R1 == 0 then $branch = 1, else $branch = 0
+	B		5			# go to update_best_match_count
+
+	# INTERMEDIATE JUMP
+	J		7			# PC = PC + 7, jump 7 instructions forward
+	J		5			# go to update_best_match
+	J		3			# go to done
+	J		-8			# go to loop_match
+	J		6			# go to update_best_match_count
+	J		7			# go to done
+	J		7			# go to update_best_match
+	# INTERMEDIATE JUMP
+
+# prep_loop
+	# Note: Set $R2 to hold the addr of an element in Pattern_Array
+	# This addr is temporarily held by $R0
+	RST		$R2			# $R2 = 0
+	ADD		$R2, $R0	# $R2 = addr of an element in the Pattern_Array
+	J		-6			# loop_match
+
+	# INTERMEDIATE JUMP
+	J		7			# go to update_best_match_count
+	J		-4			# go to prep_loop
+	J		7			# go to done
+	# INTERMEDIATE JUMP
+
+# update_best_match
+	# Note: $R2 and $R3 can be reused.
+	RST		$R2			# $R2 = 0
+	ADD		$R2, $R1	# $R2 = 0 + $R1 = $R1
+	STSH	$R2			# $SR2 = $R2, best_match_score updated
+
+	# INTERMEDIATE JUMP
+	J		4			# PC = PC + 4, jump two instructions forward
+	J		5			# go to update_best_match_count
+	J		-7			# go to prep_loop
+	J		7			# go to done
+	# INTERMEDIATE JUMP
+
+	RST		$R3			# $R3 = 0
+	STSH	$R3			# $SR3 = $R3 = 0, reset best_match_score
+
+# update_best_match_count
+	RCVR	$R3			# $R3 = $SR3 = best_match_count
+	ADDI	$R3, 1		# $R3 = $R3 + 1
+	STSH	$R3			# $SR3 = $R3, best_match_count updated
+	J		-7			# PC = PC - 7, go to prep_loop
+
+# done
+	# Note: Store the best_match_score and best_match_count to the appropriate
+	# data memory address
+	# R0 and $R1 can be reused at this point.
+	RCVR	$R2			# $R2 = $SR2 = best_match_score
+	RCVR	$R3			# $R3 = $SR3 = best_match_count
+	RST		$R0			# $R0 = 0
+	ADDI	$R0, 1		# $R0 = 0 + 1 = 1
+	LSL		$R0			# $R0 = 1 * 2 = 2
+	LSL		$R0			# $R0 = 2 * 2 = 4
+	STR		$R2, $R0	# MEM[$R0] = MEM[4] = S = $R2 = best matching score
+	ADDI	$R0, 1		# $R0 = 4 + 1 = 5
+	STR		$R3, $R0	# MEM[$R0] = MEM[5] = C = $R3 = best matching count
+	END

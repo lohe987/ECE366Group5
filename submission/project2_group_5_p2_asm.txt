@@ -85,7 +85,7 @@
 	ADDI	$R3, 1		# $R3 = counter = $R3 + 1
 
 # loop_no_count
-	LSL		$R0, 1		# $R0 = $R0 << 1
+	LSL		$R0		# $R0 = $R0 << 1
 
 	# INTERMEDIATE JUMP
 	J		7			# PC = PC + 3, jump 3 instructions forward
