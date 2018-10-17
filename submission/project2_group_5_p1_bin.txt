@@ -15,6 +15,7 @@
 # ...   | ...
 
 #load P and Q
+11010100 	 # $R2 = MEM[$R0] = MEM[0] = P
 00010001   #$R0 = 1
 01010110   #$R3 = MEM[$R0] = MEM[1] = Q
 11111010   #$SR2 = $R2, Stash P to a special register
