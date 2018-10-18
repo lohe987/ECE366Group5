@@ -102,6 +102,10 @@
       11001001    #B loop_count
       00111001    #J loop_no_count
       
+      #INTERMEDIATE JUMP
+      00111001	  #go to loop_match
+      00110111	  #go to done
+      
 # count_done
       # Notes: $R3 = number of matched bits for Pattern_Array[$R2]
 	# $R0 and $R1 can be reused at this point.
@@ -126,7 +130,7 @@
       11000011    #B update_best_match
 
       # INTERMEDIATE JUMP
-      10110010    # PC = PC + 4, jump two instructions forward
+      10110100    # PC = PC + 4, jump two instructions forward
       00111010	  # go to loop_match
       00110110	  # go to update_best_match
       00110110	  # go to done
