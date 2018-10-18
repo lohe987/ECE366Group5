@@ -64,15 +64,15 @@
       01100101    # $R0 = $R0 bitwise not xor (equivalence) $R1
       
       # INTERMEDIATE JUMP
-      10110010    # PC = PC + 3, jump three instructions forward
-      10110111    # go to loop_match
+      10110011    # PC = PC + 3, jump three instructions forward
+      00111001    # go to loop_match
       00110101	  #jump to done
 		  
       # INTERMEDIATE JUMP
       
       01110111    # $R3 = counter = 0
       11110101    # $R1 = 0
-      00110101    # go to start_count
+      00111011    # go to start_count
       		  
 # loop_count
       00011101    # $R3 = counter = $R3 + 1
@@ -81,7 +81,7 @@
       01100000    # $R0 = $R0 << 1
       
       # INTERMEDIATE JUMP
-      10110010    # PC = PC + 4, jump 4 instructions forward
+      10110100    # PC = PC + 4, jump 4 instructions forward
       10110111	  # jump to done
       00111001	  # go to loop_match
       00110110	  # go to start_count
@@ -138,7 +138,7 @@
       00000110    # $R1 = $R1 - $R2
 
       # INTERMEDIATE JUMP
-      10110010    # PC = PC + 4, jump two instructions forward
+      10110100    # PC = PC + 4, jump two instructions forward
       00111010	  # go to loop_match
       00110101	  # go to update_best_match
       00110101	  # go to done
@@ -164,9 +164,9 @@
       00111010    #J loop_match
 
       # INTERMEDIATE JUMP
-      00110011    # go to update_best_match_count
+      00110111    # go to update_best_match_count
       00111100	  # go to prep_loop
-      00110011	  # go to done
+      00111011	  # go to done
       
 # update_best_match
       # Note: $R2 and $R3 can be reused.
