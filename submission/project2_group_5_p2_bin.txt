@@ -62,7 +62,7 @@
       # INTERMEDIATE JUMP
       10110010    # PC = PC + 3, jump three instructions forward
       10110111    # go to loop_match
-      		  #jump to done
+      00110101	  #jump to done
 		  
       # INTERMEDIATE JUMP
       
