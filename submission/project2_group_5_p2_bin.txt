@@ -52,7 +52,11 @@
       00100001    # If 0 < n then $branch = 1, else $branch = 0
       01000100    # PC = PC + 4, go forward 4 instructions
       00110010    # jump to done
------------------------------------------
+
+     #INTERMEDIATE JUMP
+      10111000	  #go to loop_match
+      00110111	  #jump to done
+	
       # Check for matched bits.
       10000010    # $R0 = $R2 = addr of an element in Pattern_Array
       11010010    # $R1 = Pattern_Array[$R0]
@@ -60,14 +64,16 @@
       01100101    # $R0 = $R0 bitwise not xor (equivalence) $R1
       
       # INTERMEDIATE JUMP
-      10110010    # PC = PC + 2, jump two instructions forward
-      10110111    # PC = PC + 2, jump two instructions forward
+      10110011    # PC = PC + 3, jump three instructions forward
+      00111001    # go to loop_match
+      00110101	  #jump to done
+		  
       # INTERMEDIATE JUMP
       
       01110111    # $R3 = counter = 0
       11110101    # $R1 = 0
-      00110101    # go to start_count
-
+      00111011    # go to start_count
+      		  
 # loop_count
       00011101    # $R3 = counter = $R3 + 1
       
@@ -75,24 +81,30 @@
       01100000    # $R0 = $R0 << 1
       
       # INTERMEDIATE JUMP
-      10110010    # PC = PC + 2, jump two instructions forward
-      00110110    # PC = PC + 6, jump to done
-      # INTERMEDIATE JUMP
+      10110100    # PC = PC + 4, jump 4 instructions forward
+      10110111	  # jump to done
+      00111001	  # go to loop_match
+      00110110	  # go to start_count
+      11000101	  # PC = PC + 5, jump 5 instructions forward
+      11001001	  # go to loop_count
+      11001001	  # go to loop_no_count
+      10111011	  #go to loop_match
+      10110111	  # jump to done
 
 # start_count
       # Check if counting is done.
       11101000    # If $R0 == 0 then $branch = 1, else $branch = 0
-      ????????    #B count_done
+      11000110    # go to count_done
       
       # Note: $R3 = matched bit counter, $R1 = 0
-	# Check wether there is matched bit or not.
+      # Check wether there is matched bit or not.
       00100001    # If $R0 < 0 then $branch = 1, else $branch =  0
-      ????????    #B loop_count
-      ????????    #J loop_no_count
+      11001001    #B loop_count
+      00111001    #J loop_no_count
       
-      # INTERMEDIATE JUMP
-      00110110    # PC = PC + 6, jump five instructions forward
-      # INTERMEDIATE JUMP
+      #INTERMEDIATE JUMP
+      00111001	  #go to loop_match
+      00110111	  #go to done
       
 # count_done
       # Notes: $R3 = number of matched bits for Pattern_Array[$R2]
@@ -107,53 +119,71 @@
       10000111    # $R1 = $R3 <- move matched bit count
 
       # INTERMEDIATE JUMP
-      10110010    # PC = PC + 2, jump two instructions forward
-      00110101 
+      10110011    # PC = PC + 3, jump two instructions forward
+      00111001 	  # go to loop_match
+      10110111	  # go to done
+		  
       # INTERMEDIATE JUMP
 
       01110010    # $R2 = current best match score
       10101001    # If $R2 < $R1 then $branch = 1, else $branch = 0
-      ????????    #B update_best_match
+      11000011    #B update_best_match
 
       # INTERMEDIATE JUMP
-      10110010    # PC = PC + 2, jump two instructions forward
-      00110110
+      10110100    # PC = PC + 4, jump two instructions forward
+      00111010	  # go to loop_match
+      00110110	  # go to update_best_match
+      00110110	  # go to done
+		  
       # INTERMEDIATE JUMP
 
       # Check if current pattern is a best match, if it is then update best_match_score
       11101110    # $R2 = -$R2
       00000110    # $R1 = $R1 - $R2
-      01101001    # If $R1 == 0 then $branch = 1, else $branch = 0
-      11000110    # go to update_best_match_count
 
       # INTERMEDIATE JUMP
-      10110010    # PC = PC + 2, jump two instructions forward
-      10110100
+      10110100    # PC = PC + 4, jump two instructions forward
+      00111010	  # go to loop_match
+      00110101	  # go to update_best_match
+      00110101	  # go to done
+		  
       # INTERMEDIATE JUMP
+      01101001	  #If $R1 == 0 then $branch = 1, else $branch = 0
+      01000101	  # go to update_best_match_count
+		  
+      #INTERMEDIATE JUMP
+      10110111	  # PC = PC +7, jump 7 instructions forward
+      10110101	  # go to update_best_match
+      00110011	  # go to done
+      10111000	  # go to loop_match
+      00110110	  # go to update_best_match_count
+      10110111	  # go to done
+      10110111	  # go to update_best_match
 
 # prep_loop
 	# Note: Set $R2 to hold the addr of an element in Pattern_Array
 	# This addr is temporarily held by $R0
       11110110    # $R2 = 0
       10001000    # $R2 = addr of an element in the Pattern_Array
-      ????????    #J loop_match
+      00111010    #J loop_match
 
       # INTERMEDIATE JUMP
-      00110011    # go to update_best_match_count
-      10111101    # PC = PC - 3, go to prep_loop
-      00110101
-      # INTERMEDIATE JUMP
+      00110111    # go to update_best_match_count
+      00111100	  # go to prep_loop
+      00111011	  # go to done
       
 # update_best_match
-	# Note: $R2 and $R3 can be reused.
+      # Note: $R2 and $R3 can be reused.
       11110110    # $R2 = 0
       00001001    # $R2 = 0 + $R1 = $R1
       11111010    # $SR2 = $R2, best_match_score updated
 
       # INTERMEDIATE JUMP
-      10110010    # PC = PC + 2, jump two instructions forward
-      10111010    # PC = PC - 6, go to prep_loop
-      10110111
+      10110100    # PC = PC + 4, jump two instructions forward
+      10110101 	  # go to update_best_match_count
+      00111001	  # go to prep_loop
+      10110111	  # go to done
+		 
       # INTERMEDIATE JUMP
       
       01110111    # $R3 = 0
