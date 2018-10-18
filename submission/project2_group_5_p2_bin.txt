@@ -53,6 +53,10 @@
       01000100    # PC = PC + 4, go forward 4 instructions
       00110010    # jump to done
 
+     #INTERMEDIATE JUMP
+      10111000	  #go to loop_match
+      00110111	  #jump to done
+	
       # Check for matched bits.
       10000010    # $R0 = $R2 = addr of an element in Pattern_Array
       11010010    # $R1 = Pattern_Array[$R0]
