@@ -112,7 +112,7 @@ for line in input_file:
         output_file.write(op + " $R" + rd + "\n")
 
     elif(line[0:8] =='11111111'):
-        print("End" + "\n")
+        print("END" + "\n")
         output_file.write("End" + "\n")
         
     else:                            #ignores everything else
