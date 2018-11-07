@@ -1,7 +1,6 @@
 # Joseph de Joya
-# ECE 366 - Project 1
+# ECE 366 - Project 3
 # Program 2 - Best Matching
-# 10/08/2018
 
 .data
 T: .word 12					# 0x2000
