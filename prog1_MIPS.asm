@@ -1,7 +1,6 @@
 # Joseph de Joya
-# ECE 366 - Project 2 - Program 1
+# ECE 366 - Project 3- Program 1
 # Modular Exponentiation
-# 09/25/2018
 
 
 .data
